@@ -16,6 +16,7 @@ A simple Product/Category management application built as a practical assessment
 - [Frontend Setup (React)](#frontend-setup-react)
 - [Running the Project Locally](#running-the-project-locally)
 - [API Endpoints](#api-endpoints)
+- [Frontend Notes](#frontend-notes)
 - [Deployment (Optional)](#deployment-optional)
 
 ---
@@ -163,7 +164,7 @@ These are the public read endpoints consumed by the frontend:
 
 | Method | Endpoint           | Description                                                                                   |
 | ------ | ------------------ | --------------------------------------------------------------------------------------------- |
-| `GET`  | `/products`        | Paginated list of products (20 per page), each with its category. Supports the filters below. |
+| `GET`  | `/products`        | Paginated list of products (10 per page), each with its category. Supports the filters below. |
 | `GET`  | `/products/{slug}` | A single product by slug, with its category.                                                  |
 | `GET`  | `/categories`      | All categories (`id`, `name`, `slug`).                                                        |
 
@@ -177,6 +178,27 @@ All filters are optional and combinable via query string:
 | `category_id` | Filter by category.                     |
 | `min_price`   | Minimum price.                          |
 | `max_price`   | Maximum price.                          |
+| `page`        | Page number for pagination.             |
+
+### Pagination
+
+`GET /products` returns Laravel's standard paginated response — **10 products per page**. The JSON includes the items in `data`, plus `current_page`, `last_page`, `total`, and a `links` array (page numbers with `url` / `label` / `active`). Use `?page=N` to fetch a specific page; filters above can be combined with `page`.
+
+### Authentication
+
+JWT-based. `POST /login` returns a token; send it on protected routes as an `Authorization: Bearer <token>` header.
+
+| Method | Endpoint  | Auth   | Description                                                              |
+| ------ | --------- | ------ | ----------------------------------------------------------------------- |
+| `POST` | `/login`  | —      | Body `{ email, password }`. Returns `{ token, user }` (`401` if invalid). |
+| `POST` | `/logout` | Bearer | Invalidates the current token.                                          |
+| `GET`  | `/me`     | Bearer | Returns the authenticated user.                                         |
+
+---
+
+## Frontend Notes
+
+- **Loading states:** the product list and product details pages show a spinner while data is being fetched, so the UI never flashes an empty / "0 products" / "not found" state before the API responds.
 
 ---
 

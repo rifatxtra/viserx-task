@@ -2,9 +2,11 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import api from "../../../lib/api";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -16,7 +18,7 @@ export default function LoginPage() {
     try {
       const response = await api.post("/login", { email, password });
       if (response.status === 200) {
-        localStorage.setItem("viserXtoken", response.data.token);
+        login(response.data.token, response.data.user);
         //redirect to admin page
       }
     } catch {

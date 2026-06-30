@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 import api from "../../../lib/api";
 
 export default function ProductDetails() {
   const { slug } = useParams();
   const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchProduct = async () => {
+    setLoading(true);
     try {
       const response = await api.get(`/products/${slug}`);
       if (response.status === 200) {
@@ -14,6 +17,8 @@ export default function ProductDetails() {
       }
     } catch (error) {
       console.error("Error fetching product:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -21,7 +26,16 @@ export default function ProductDetails() {
     fetchProduct();
   }, [slug]);
 
-  if (!product) return null;
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  if (!product)
+    return <p className="text-center text-gray-500">Product not found</p>;
 
   return (
     <div className="mx-auto w-[90%] max-w-5xl py-10">
