@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
+use App\Observers\ProductObserver;
 
+#[ObservedBy([ProductObserver::class])]
 class Product extends Model
 {
     protected $table = 'products';

@@ -115,4 +115,16 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Notification Address
+    |--------------------------------------------------------------------------
+    |
+    | Recipient of the product create/update notification email dispatched by
+    | the SendProductSavedEmail queued job.
+    |
+    */
+
+    'admin_address' => env('ADMIN_EMAIL', 'admin@example.com'),
+
 ];

@@ -4,14 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::select('id', 'name', 'slug')
-            ->get();
+        if ($request->filled('page')) {
+            return response()->json(
+                Category::select('id', 'name', 'slug')->latest()->paginate(9)
+            );
+        }
+
+        $categories = Cache::remember('categories.index', 3600, function () {
+            return Category::select('id', 'name', 'slug')->latest()->get();
+        });
+
         return response()->json($categories);
     }
 
