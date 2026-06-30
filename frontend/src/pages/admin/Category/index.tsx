@@ -5,12 +5,14 @@ import api from "../../../lib/api";
 
 export default function AdminCategoryPage() {
   const [categories, setCategories] = useState<any[]>([]);
+  const [links, setLinks] = useState<any[]>([]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = async (params = { page: 1 }) => {
     try {
-      const response = await api.get("/categories");
+      const response = await api.get("/categories", { params });
       if (response.status === 200) {
-        setCategories(response.data);
+        setCategories(response.data.data);
+        setLinks(response.data.links);
       }
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -20,6 +22,12 @@ export default function AdminCategoryPage() {
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  const goToPage = (url: string | null) => {
+    if (!url) return;
+    const page = new URL(url).searchParams.get("page");
+    fetchCategories({ page: Number(page) });
+  };
 
   const handleDelete = async (id: number) => {
     if (!window.confirm("Delete this category?")) return;
@@ -90,6 +98,25 @@ export default function AdminCategoryPage() {
           </p>
         )}
       </div>
+
+      {links.length > 3 && (
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-1">
+          {links.map((link, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => goToPage(link.url)}
+              disabled={!link.url}
+              className={`rounded-md border px-3 py-1.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                link.active
+                  ? "border-blue-600 bg-blue-600 text-white"
+                  : "border-gray-300 text-gray-700 hover:bg-gray-50"
+              }`}
+              dangerouslySetInnerHTML={{ __html: link.label }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

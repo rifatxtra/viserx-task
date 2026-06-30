@@ -7,7 +7,7 @@ const navLinks = [{ label: "Products", to: "/products" }];
 
 export default function PublicNav() {
   const [open, setOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <header className="w-full bg-white border-b border-gray-200">
@@ -35,13 +35,12 @@ export default function PublicNav() {
             ))}
           </ul>
           {user ? (
-            <button
-              type="button"
-              onClick={logout}
+            <Link
+              to="/admin"
               className="rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
             >
-              Logout
-            </button>
+              Dashboard
+            </Link>
           ) : (
             <Link
               to="/login"
@@ -109,16 +108,13 @@ export default function PublicNav() {
           ))}
           <li>
             {user ? (
-              <button
-                type="button"
-                onClick={() => {
-                  logout();
-                  setOpen(false);
-                }}
-                className="mt-1 block w-full rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+              <Link
+                to="/admin"
+                onClick={() => setOpen(false)}
+                className="mt-1 block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-blue-700"
               >
-                Logout
-              </button>
+                Dashboard
+              </Link>
             ) : (
               <Link
                 to="/login"
