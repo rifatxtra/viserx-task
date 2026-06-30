@@ -6,7 +6,7 @@ export default function ProfilePage() {
   return (
     <div>
       <h1 className="mb-6 text-2xl font-semibold text-gray-900">Profile</h1>
-      <div className="max-w-md rounded-lg border border-gray-200 bg-white p-6">
+      <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
         <div className="space-y-4">
           <div>
             <p className="text-xs font-medium text-gray-500">Name</p>

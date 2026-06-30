@@ -20,4 +20,8 @@ Route::prefix('products')->group(function () {
 
 Route::prefix('categories')->group(function () {
     Route::get('/', [CategoryController::class, 'index']);
+    Route::post('/', [CategoryController::class, 'store'])->middleware('auth:api');
+    Route::get('/{category}', [CategoryController::class, 'show'])->middleware('auth:api');
+    Route::put('/{category}', [CategoryController::class, 'update'])->middleware('auth:api');
+    Route::delete('/{category}', [CategoryController::class, 'destroy'])->middleware('auth:api');
 });

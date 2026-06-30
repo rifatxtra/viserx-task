@@ -200,6 +200,17 @@ JWT-based. `POST /login` returns a token; send it on protected routes as an `Aut
 | ------ | -------- | ------ | ---------------------------------------------------------------- |
 | `GET`  | `/stats` | Bearer | Product and category counts — `{ products, categories }`.        |
 
+### Category management
+
+`GET /categories` (above) is public; the management actions below require a Bearer token. The `slug` is auto-generated from `name` (and regenerated on update), so it is never sent by the client.
+
+| Method   | Endpoint           | Auth   | Description                                                          |
+| -------- | ------------------ | ------ | ------------------------------------------------------------------- |
+| `POST`   | `/categories`      | Bearer | Create a category. Body `{ name }` (required, unique).              |
+| `GET`    | `/categories/{id}` | Bearer | A single category by id.                                            |
+| `PUT`    | `/categories/{id}` | Bearer | Update a category. Body `{ name }`.                                 |
+| `DELETE` | `/categories/{id}` | Bearer | Delete a category. **Cascades** — also deletes that category's products. |
+
 ---
 
 ## Frontend Notes

@@ -7,6 +7,8 @@ import AdminLayout from "./layouts/AdminLayout";
 import DashboardPage from "./pages/admin/Dashboard";
 import AdminProductPage from "./pages/admin/Product";
 import AdminCategoryPage from "./pages/admin/Category";
+import CategoryCreate from "./pages/admin/Category/create";
+import CategoryEdit from "./pages/admin/Category/edit";
 import ProfilePage from "./pages/admin/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
@@ -28,6 +30,8 @@ function App() {
               <Route index element={<DashboardPage />} />
               <Route path="products" element={<AdminProductPage />} />
               <Route path="categories" element={<AdminCategoryPage />} />
+              <Route path="categories/create" element={<CategoryCreate />} />
+              <Route path="categories/:id/edit" element={<CategoryEdit />} />
               <Route path="profile" element={<ProfilePage />} />
             </Route>
           </Route>
