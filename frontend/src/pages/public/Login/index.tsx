@@ -1,20 +1,39 @@
 import { useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import api from "../../../lib/api";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // TODO: connect to POST /api/login
+    setError("");
+    try {
+      const response = await api.post("/login", { email, password });
+      if (response.status === 200) {
+        localStorage.setItem("viserXtoken", response.data.token);
+        //redirect to admin page
+      }
+    } catch {
+      setError("Invalid email or password");
+    }
   };
 
   return (
     <div className="mx-auto w-[90%] max-w-md py-12">
       <div className="rounded-lg border border-gray-200 bg-white p-6 sm:p-8">
         <h1 className="mb-6 text-2xl font-semibold text-gray-900">Login</h1>
+
+        {error && (
+          <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            {error}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
