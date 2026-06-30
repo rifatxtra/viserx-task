@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import api from "../../../lib/api";
 import { useAuth } from "../../../context/AuthContext";
 
@@ -11,18 +11,26 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
       const response = await api.post("/login", { email, password });
       if (response.status === 200) {
         login(response.data.token, response.data.user);
-        //redirect to admin page
+        navigate("/admin");
       }
-    } catch {
-      setError("Invalid email or password");
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        setError("Invalid email or password");
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,9 +98,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+            disabled={loading}
+            className="flex w-full items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-70"
           >
-            Login
+            {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Login"}
           </button>
         </form>
       </div>

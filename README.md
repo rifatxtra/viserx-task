@@ -194,6 +194,12 @@ JWT-based. `POST /login` returns a token; send it on protected routes as an `Aut
 | `POST` | `/logout` | Bearer | Invalidates the current token.                                          |
 | `GET`  | `/me`     | Bearer | Returns the authenticated user.                                         |
 
+### Dashboard
+
+| Method | Endpoint | Auth   | Description                                                       |
+| ------ | -------- | ------ | ---------------------------------------------------------------- |
+| `GET`  | `/stats` | Bearer | Product and category counts — `{ products, categories }`.        |
+
 ---
 
 ## Frontend Notes
