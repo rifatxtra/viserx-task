@@ -12,6 +12,8 @@ export default function ProductPage() {
     min_price: "",
     max_price: "",
   });
+  const [links, setLinks] = useState<any[]>([]);
+  const [total, setTotal] = useState(0);
 
   const fetchCategories = async () => {
     try {
@@ -32,6 +34,8 @@ export default function ProductPage() {
       const productsResponse = await api.get("/products", { params });
       if (productsResponse.status === 200) {
         setProducts(productsResponse.data.data);
+        setLinks(productsResponse.data.links);
+        setTotal(productsResponse.data.total);
       } else {
         setProducts([]);
       }
@@ -48,7 +52,13 @@ export default function ProductPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchProducts(filters);
+    fetchProducts(filters); // page defaults to 1
+  };
+
+  const goToPage = (url: string | null) => {
+    if (!url) return; // Previous on first / Next on last page have no url
+    const page = new URL(url).searchParams.get("page");
+    fetchProducts({ ...filters, page });
   };
 
   return (
@@ -140,6 +150,9 @@ export default function ProductPage() {
 
         {/* Product grid */}
         <section className="flex-1">
+          <p className="mb-4 text-sm text-gray-600">
+            {total} {total === 1 ? "product" : "products"}
+          </p>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {products.map((product) => (
               <article
@@ -166,6 +179,25 @@ export default function ProductPage() {
               </article>
             ))}
           </div>
+
+          {links.length > 3 && (
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-1">
+              {links.map((link, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => goToPage(link.url)}
+                  disabled={!link.url}
+                  className={`rounded-md border px-3 py-1.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                    link.active
+                      ? "border-blue-600 bg-blue-600 text-white"
+                      : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }`}
+                  dangerouslySetInnerHTML={{ __html: link.label }}
+                />
+              ))}
+            </div>
+          )}
         </section>
       </div>
     </div>

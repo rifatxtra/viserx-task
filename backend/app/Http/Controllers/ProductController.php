@@ -24,7 +24,7 @@ class ProductController extends Controller
             })
             ->select('id', 'name', 'slug', 'price', 'image_url', 'category_id')
             ->latest()
-            ->paginate(20);
+            ->paginate(10);
         return response()->json($products);
     }
 
